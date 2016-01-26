@@ -1,4 +1,3 @@
 #!/bin/bash
 
-mysqldump -hdb -uroot -phyRob0otlaz4 manifeste | gzip > /srv/backup/manifeste.sql.gz
-
+pg_dump -hpgdb -Upostgres eve | gzip > /srv/backup/eve.sql.gz
