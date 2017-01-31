@@ -39,14 +39,14 @@ db:
   volumes:
     - ./var/lib/postgresql/data:/var/lib/postgresql/data
   environment:
-    - POSTGRES_PASSWORD=hyRob0otlaz4
+    - POSTGRES_PASSWORD=noodFof2Kna
 
 app:
   build: .
   command: /bin/bash bin/app.sh
   volumes:
     - ./app:/srv/app
-    - ./lib/mezzanine-agenda:/srv/lib/mezzanine-agenda
+    # - ./lib/mezzanine-agenda:/srv/lib/mezzanine-agenda
     # - ./lib/grappelli-safe:/srv/lib/grappelli-safe
     # - ./lib/mezzanine/:/srv/lib/mezzanine
     # - ./lib/cartridge/:/srv/lib/cartridge

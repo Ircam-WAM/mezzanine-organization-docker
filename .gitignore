@@ -15,8 +15,10 @@ develop-eggs
 .thumbnails
 .tmp
 *.lock
-var
 .init
+data
+postgres
+mysql
 
 # Installer logs
 pip-log.txt
