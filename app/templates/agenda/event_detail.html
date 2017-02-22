@@ -1,5 +1,5 @@
-{% extends "pages/page.html" %}
-{% load mezzanine_tags comment_tags keyword_tags rating_tags i18n future disqus_tags event_tags organization_tags %}
+{% extends "agenda/event_base.html" %}
+{% load mezzanine_tags comment_tags keyword_tags rating_tags i18n future disqus_tags event_tags organization_tags pages_tags %}
 
 {% block meta_title %}{{ event.meta_title }}{% endblock %}
 
@@ -20,29 +20,8 @@
 {% endblock %}
 
 {% block page_title %}
-    {% editable event.title %}
-        <h1 class="dotted">{{ event.title }}</h1>
-    {% endeditable %}
-    {% if event.sub_title %}
-        {% editable event.sub_title %}
-            <div class="chapo">
-                {{ event.sub_title }}
-            </div>
-        {% endeditable %}
-    {% endif %}
-{% endblock %}
-
-{% block page_tags %}
-    {% if event.departments.all.0 %}
-        <div class="tag dashed">
-          {{ event.departments.all.0.department.name }}
-        </div>
-    {% endif %}
-    {% if event.category %}
-        <div class="tag tag--category">
-            {{ event.category }}
-        </div>
-    {% endif %}
+    <h1 class="section-title section-title--uppercase section-title--main"><a href="{% url 'event_list' %}"><i class="fsl fa fa-angle-left"></i>{% trans "Back to events" %}</a></h1>
+    {% include 'agenda/includes/event_linecard.html' %}
 {% endblock %}
 
 {% block breadcrumb_menu %}
@@ -64,34 +43,36 @@
 {% endblock %}
 
 {% block page_link %}
-    <div class="mt4">
-        <div class="row">
-            {% if child %}
-                {% with child.links.all as links %}
-                    {% if links %}
-                        <div class="col-xs-6">
-                            {% include 'core/inc/link.html' %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-            {% else %}
-                {% with event.links.all as links %}
-                    {% if links %}
-                        <div class="col-xs-6">
-                            {% include 'core/inc/link.html' %}
-                        </div>
-                    {% endif %}
-                {% endwith %}
-            {% endif %}
-            {% if event.mentions %}
-                <div class="col-xs-6">
-                    <div class="small-text">
-                        {{ event.mentions }}
-                   </div>
-                </div>
-            {% endif %}
+    {% if event.mentions or event.links.all|length > 0 %}
+        <div class="mt4">
+            <div class="row">
+                {% if child %}
+                    {% with child.links.all as links %}
+                        {% if links %}
+                            <div class="col-xs-8">
+                                {% include 'core/inc/link.html' %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% else %}
+                    {% with event.links.all as links %}
+                        {% if links %}
+                            <div class="col-xs-8">
+                                {% include 'core/inc/link.html' %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
+                {% if event.mentions %}
+                    <div class="col-xs-8">
+                        <div class="small-text">
+                            {{ event.mentions }}
+                       </div>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block page_audio %}
@@ -114,30 +95,37 @@
 
 {% block page_person_list %}
     {% if event.persons.all %}
-        <div class="white-bg pb2">
-            <hr class="mt0" />
+        <div class="pb2">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-9 col-sm-push-3 col-lg-8 col-lg-push-2" data-summary-content>
-                        <h2 class="dotted">
-                            {% if event.trainings.all %}
-                                {% trans "Trainers" %}<br>
-                            {% else %}
-                                {% trans "Persons" %}<br>
-                            {% endif %}
-                        </h2>
+                    <div class="col-xxs-16 col-md-10 col-md-push-3" data-summary-content>
+                        <div class="tac">
+                            <h2 class="section-title section-title--uppercase section-title--main section-title--underline">
+                                {% if event.trainings.all %}
+                                    {% trans "Trainers" %}<br>
+                                {% else %}
+                                    {% trans "Persons" %}<br>
+                                {% endif %}
+                            </h2>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-9 col-sm-push-3 col-lg-8 col-lg-push-2">
-                        {% for person in event.persons.all %}
-                                {% with person.person as person %}
-                                    {% include "network/inc/person/person_card_circle.html" %}
-                                {% endwith %}
-                        {% endfor %}
+                    <div class="col-md-12 col-md-push-2 tac">
+                        <div class="row">
+                            <div>
+                                {% for person in event.persons.all %}
+                                    {% with person.person as person %}
+                                        <div class="col-md-5 col-xs-8">
+                                            {% include "network/inc/person/person_card_square.html" %}
+                                        </div>
+                                    {% endwith %}
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -152,25 +140,13 @@
 {% endblock %}
 
 {% block page_sidebar %}
-    <div class="page__meta" data-sticky data-sticky-parent="row" data-sticky-offset="100" data-sticky-detach-at="971">
-        {% block event_detail_postedby %}
-            {% editable event.start event.end event.location %}
-                {% with True as unit_booking %}
-                    {% include 'agenda/includes/event_metainfo.html' %}
-                {% endwith %}
-            {% endeditable %}
-        {% endblock %}
-        {% set_short_url_for event %}
-        {% with event as object %}
-            {% with True as is_event %}
-                {% include "includes/share_buttons.html" %}
-            {% endwith %}
-        {% endwith %}
+    <div class="" data-sticky data-sticky-parent="row" data-sticky-offset="100" data-sticky-detach-at="1171">
+        {% include "includes/share_buttons.html" %}
     </div>
 {% endblock %}
 
 {% block page_related_content %}
-    {% with dynamic_content=event.dynamic_content_event.all object=event %}
+    {% with dynamic_content=event.dynamic_content_event.all|filter_content object=event %}
         {% include "core/inc/related_content.html" %}
     {% endwith %}
 {% endblock %}

@@ -14,10 +14,14 @@ var StickyKitInit = require('./modules/sticky-kit-init');
 var LightSliderPageInit = require('./modules/lightsliderpage-init');
 var LightSliderHomeInit = require('./modules/lightsliderhome-init');
 var LightSliderNetworkInit = require('./modules/lightslidernetwork-init');
+var LightSliderPersonsInit = require('./modules/lightsliderpersons-init');
+var LightSliderRelatedInit = require('./modules/lightsliderrelated-init');
 var LazyLoadInit = require('./modules/lazyload-init');
 var HomeMenu = require('./modules/home-menu');
 var Audio = require('./modules/audio');
 var Video = require('./modules/video');
+var VideoOverlay = require('./modules/video-overlay');
+var Instagram = require('./modules/instagram');
 
 //
 // Init all the modules
@@ -35,7 +39,11 @@ window[StickyKitInit] = new StickyKitInit();
 window[LightSliderPageInit] = new LightSliderPageInit();
 window[LightSliderHomeInit] = new LightSliderHomeInit();
 window[LightSliderNetworkInit] = new LightSliderNetworkInit();
+window[LightSliderPersonsInit] = new LightSliderPersonsInit();
+window[LightSliderRelatedInit] = new LightSliderRelatedInit();
 window[LazyLoadInit] = new LazyLoadInit();
 window[HomeMenu] = new HomeMenu();
-window[Audio] = new Audio();
-window[Video] = new Video();
+window['Audio'] = new Audio();
+window['Video'] = new Video();
+window[VideoOverlay] = new VideoOverlay();
+window[Instagram] = new Instagram();

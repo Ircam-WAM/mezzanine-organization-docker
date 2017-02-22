@@ -25,29 +25,19 @@ $module: ".header";
     z-index: 100;
     position: relative;
 
+    background: white;
+    box-shadow: 0 10px 130px rgba(79,227,194,0.5);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
+
     @include mq($until: sm) {
-        position: fixed;
-        width: 100%;
-        top: 0;
-        left: 0;
-        z-index: 100;
         height: $header-height-tablet;
-        overflow: hidden;
         @include mq($until: xs) {
             height: $header-height-mobile;
         }
-    }
-
-    &__pre {
-
-        background: $color-black;
-        height: $header-pre-height;
-        color: white;
-
-        @include mq($until: sm) {
-            display: none;
-        }
-
     }
 
     &__nav {

@@ -33,7 +33,12 @@ EXCLUDED_MODELS = ("organizationplaylist", "personplaylist")
 class MediaDetailView(SlugMixin, DetailView):
 
     model = Media
-    template_name='media/media_detail.html'
+    context_object_name = 'media'
+
+    def get_template_names(self):
+        templates = super(MediaDetailView, self).get_template_names()
+        templates.insert(0,'media/'+self.kwargs['type'].lower()+'/'+self.kwargs['type'].lower()+'_detail.html')
+        return templates
 
 
 class PlaylistDetailView(SlugMixin, DetailView):
@@ -103,3 +108,20 @@ class PlayListMediaView(autocomplete.Select2QuerySetView):
         if self.q:
             qs = qs.filter(title__istartswith=self.q)
         return qs
+
+
+class MediaOverlayView(SlugMixin, DetailView):
+    model = Media
+    template_name='media/media/media_overlay.html'
+    context_object_name = 'media'
+
+    def get_template_names(self):
+        templates = super(MediaOverlayView, self).get_template_names()
+        templates.insert(0,'media/'+self.object.type.lower()+'/'+self.object.type.lower()+'_overlay.html')
+        return templates
+
+
+class PlaylistOverlayView(SlugMixin, DetailView):
+    model = Playlist
+    template_name='media/playlist_overlay.html'
+    context_object_name = 'playlist'

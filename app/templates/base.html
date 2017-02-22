@@ -39,62 +39,73 @@
 <body id="{% block body_id %}body{% endblock %}" class="{% block body_class %}{% endblock %}">
     {% spaceless %}
 
-    <div class="pushy pushy-left">
-        {% include "includes/sidebar.html" %}
-    </div>
+    {% block sidebar %}
+        <div class="pushy pushy-left">
+            {% include "includes/sidebar.html" %}
+        </div>
+    {% endblock %}
 
-    <div class="site-overlay">
-    </div>
+    {% block site_overlay %}
+        <div class="site-overlay">
+        </div>
+    {% endblock %}
 
-    <div class="header push">
-        <div class="header__pre">
+    {% block header %}
+        <div class="header push">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-10 col-md-push-1 tac">
-                        {% page_menu "pages/menus/action.html" %}
-                    </div>
-                    <div class="col-md-1 col-md-push-1 tar">
-                        {% include "includes/languages.html" %}
+                <div class="row header__nav">
+                    <div class="col-md-16 tal">
+                        <div id="navHeader">
+                            {% page_menu "pages/menus/header.html" %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    {% endblock %}
 
-        <div class="container">
-            <div class="row header__nav">
-                <div class="col-md-12 tac">
-                    <div id="navHeader">
-                        {% page_menu "pages/menus/header.html" %}
-                    </div>
+    {% block container %}
+        <div id="container">
+            <main class="main" role="main">
+                {% block content_header %}{% endblock %}
+                {% block main %}{% endblock %}
+                {% block content_footer %}{% endblock %}
+            </main>
+
+            {% block social %}
+                {% include "includes/social.html" %}
+            {% endblock %}
+
+            {% block footer %}
+                <footer class="footer" role="footer">
+                    {% include "includes/footer.html" %}
+                </footer>
+            {% endblock %}
+        </div>
+    {% endblock %}
+
+    {% block overlay_container %}
+    <div class="overlay" id="overlay">
+        <a href="#" id="overlayClose" class="overlay__close">
+        </a>
+        <div class="overlay__container">
+            <div class="overlay__content">
+                <div id="overlayContent">
+                </div>
+                <div class="overlay__loader" id="overlayLoader">
+                    <i class="loading"></i>
                 </div>
             </div>
-            {% if not on_home %}
-                <div class="row white-bg">
-                    <div class="col-md-8 col-md-push-2">
-                        <ul class="breadcrumb">
-                            {% spaceless %}
-                                {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
-                            {% endspaceless %}
-                        </ul>
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </div>
+    {% endblock %}
 
-    <div id="container">
-        <main class="main" role="main">
-            {% block content_header %}{% endblock %}
-            {% block main %}{% endblock %}
-            {% block content_footer %}{% endblock %}
-        </main>
-
-        <footer class="footer" role="footer">
-            {% include "includes/footer.html" %}
-        </footer>
-    </div>
     {% search_form %}
-    {% include "includes/footer_scripts.html" %}
+
+    {% block footer_scripts %}
+        {% include "includes/footer_scripts.html" %}
+    {% endblock %}
+
     {% endspaceless %}
 
 </body>

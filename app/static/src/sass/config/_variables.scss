@@ -30,12 +30,12 @@ $breakpoints: (
 	xxs: 0px,
 	xs: 752px,
 	sm: 972px,
-	md: 1072px,
-	lg: 1372px
+	md: 1172px,
+	lg: 1440px
 );
 
-$grid-columns: 12;
-$grid-gutter: 30px;
+$grid-columns: 16;
+$grid-gutter: 20px;
 $grid-container-prefix: 'container';
 $grid-row-prefix: 'row';
 $grid-col-prefix: 'col';
@@ -99,9 +99,9 @@ $typestyles: (
 		weight: regular
 	),
 	heading-3: (
-		font-size: l,
+		font-size: m,
 		line-height: 1.5,
-		weight: regular
+		weight: bold
 	)
 );
 

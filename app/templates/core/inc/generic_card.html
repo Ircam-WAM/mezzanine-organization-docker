@@ -6,19 +6,20 @@
         {% block image %}
         {% endblock %}
 
-        {% block tags %}
-        {% endblock %}
-
         {% block btn %}
         {% endblock %}
 
     </div>
 
     <div class="article-box__content tal">
-        <h3 class="article-box__title">
+        <div class="article-box__title">
             {% block title %}
             {% endblock %}
-        </h3>
+        </div>
+        <div class="article-box__tags">
+            {% block tags %}
+            {% endblock %}
+        </div>
         <div class="article-box__subtitle">
             {% block subtitle %}
             {% endblock %}

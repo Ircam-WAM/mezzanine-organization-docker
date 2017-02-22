@@ -1,11 +1,12 @@
-var Video = function() {
+var Video = function(context) {
 
     this.player = null;
+    this.context = context || $('body');
 
     //
     // Init
     //
-    if($('#video-js-playlist').length > 0) {
+    if($('#video-js-playlist', this.context).length > 0) {
         this.init();
     }
 
@@ -14,6 +15,10 @@ var Video = function() {
 Video.prototype.init = function() {
 
     var that = this;
+
+    if(that.player) {
+        that.player.dispose();
+    }
 
     that.player = videojs('video-js-playlist', {
         aspectRatio:"905:520"
@@ -52,11 +57,17 @@ Video.prototype.init = function() {
         });
 
     });
-    console.log(playlist);
 
     that.player.playlist(playlist);
+    return that.player;
 
 };
+
+Video.prototype.play = function(e) {
+
+    this.player.play();
+
+}
 
 Video.prototype.open = function(e) {
 
