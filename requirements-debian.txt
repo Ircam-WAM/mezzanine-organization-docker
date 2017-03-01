@@ -10,3 +10,7 @@ vim
 python-sphinx
 ruby
 ruby-dev
+libsasl2-dev
+python3-dev
+libldap2-dev
+libssl-dev
