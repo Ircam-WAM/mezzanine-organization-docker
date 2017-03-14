@@ -42,8 +42,8 @@ class ProjectImageTranslationOptions(TranslationOptions):
     pass
 
 
-@register(ProjectSimpleImage)
-class ProjectSimpleImageTranslationOptions(TranslationOptions):
+@register(ProjectUserImage)
+class ProjectUserImageTranslationOptions(TranslationOptions):
 
     pass
 
@@ -120,8 +120,14 @@ class DynamicContentProjectTranslationOptions(TranslationOptions):
     fields = ()
 
 
-@register(ProjectICTData)
-class ProjectICTDataTranslationOptions(TranslationOptions):
+@register(ProjectPublicData)
+class ProjectPublicDataTranslationOptions(TranslationOptions):
+
+    pass
+
+
+@register(ProjectPrivateData)
+class ProjectPrivateDataTranslationOptions(TranslationOptions):
 
     pass
 
