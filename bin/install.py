@@ -31,7 +31,7 @@ set -e
 PROJECT_NAME=%s
 YAMLFILE=%s
 OPTS="-f $YAMLFILE -p $PROJECT_NAME"
-UPOPTS="-d --no-recreate --no-build --no-deps"
+UPOPTS="-d --no-build --no-deps"
 
 . /lib/lsb/init-functions
 
