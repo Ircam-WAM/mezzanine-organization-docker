@@ -50,6 +50,12 @@ app/themes/base/static/css
 app/themes/base/static/img
 app/themes/base/static/vendors
 
+app/themes/manifeste2017/static/js
+app/themes/manifeste2017/static/css
+app/themes/manifeste2017/static/img
+app/themes/manifeste2017/static/vendors
+
+
 ### SublimeText ###
 ###################
 
