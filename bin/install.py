@@ -31,7 +31,7 @@ set -e
 PROJECT_NAME=%s
 YAMLFILE=%s
 OPTS="-f $YAMLFILE -p $PROJECT_NAME"
-UPOPTS="-d --no-recreate --no-build --no-deps"
+UPOPTS="-d --no-build --no-deps"
 
 . /lib/lsb/init-functions
 
@@ -158,6 +158,10 @@ class DockerCompositionInstaller(object):
         if not os.path.exists(log_path) :
             os.makedirs(log_path, 0o755)
         os.symlink(cron_path, '/etc/cron.d/' + self.name)
+        uid  = int(getpwnam('root').pw_uid)
+        guid = int(getgrnam('root').gr_gid)
+        fd_cron_path = os.open(cron_path, os.O_RDONLY)
+        os.fchown(fd_cron_path, 0, 0)
 
     def uninstall_daemon_sysvinit(self):
         script = '/etc/init.d/' + self.name
