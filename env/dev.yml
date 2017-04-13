@@ -21,6 +21,8 @@
 
 app:
   command: /bin/sh bin/app.sh --runserver
+  volumes:
+    - ./app/:/srv/app
   ports:
     - "9024:8000"
   environment:
