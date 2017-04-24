@@ -26,7 +26,7 @@ $module: ".home";
         > a {
             background: transparent;
             &:before {
-                color: #F2EDDC;
+                color: $color-black;
                 font-size: 40px;
             }
         }
@@ -39,7 +39,11 @@ $module: ".home";
     }
 
     .calendar {
-        @include margin-top(5);
+        @include margin-top(7);
+
+        @include mq($until: sm) {
+            display: none;
+        }
     }
 
 }
