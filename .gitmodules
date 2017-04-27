@@ -6,6 +6,10 @@
 	path = lib/mezzanine
 	url = https://github.com/yomguy/mezzanine.git
 	branch = master
+[submodule "app/locale"]
+    path = app/locale
+    url = https://ezawadzki@gitlab.com/ezawadzki/mezzo-locale.git
+    branch = manifeste-2017
 [submodule "var"]
 	path = var
 	url = git+ssh://git@git.forge.ircam.fr/manifeste-2017-data.git
