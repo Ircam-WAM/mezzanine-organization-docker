@@ -13,3 +13,6 @@
 [submodule "lib/django-prestashop"]
 	path = lib/django-prestashop
 	url = https://github.com/yomguy/django-prestashop.git
+[submodule "bin"]
+	path = bin
+	url = git+ssh://git@git.forge.ircam.fr/mezzanine-organization-bin.git
