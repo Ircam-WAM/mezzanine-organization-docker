@@ -14,3 +14,6 @@
 	path = var
 	url = git+ssh://git@git.forge.ircam.fr/manifeste-2017-data.git
 	branch = master
+[submodule "bin"]
+	path = bin
+	url = git+ssh://git@git.forge.ircam.fr/mezzanine-organization-bin.git
