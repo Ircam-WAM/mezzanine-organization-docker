@@ -2,6 +2,6 @@ APP=/srv/ircam-www
 PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 
 0     */3   *  *  * cri cd $APP; bin/push.sh >> var/log/cron/push.log
-50    14    4  *  * cri cd $APP; docker-compose run app python /srv/app/manage.py timesheet-mail --log /var/log/cron/timesheet.log
-30    14    10 *  * cri cd $APP; docker-compose run app python /srv/app/manage.py timesheet-mail --reminder --log /var/log/cron/timesheet.log
+#50    14    4  *  * cri cd $APP; docker-compose run app python /srv/app/manage.py timesheet-mail --log /var/log/cron/timesheet.log
+#30    14    10 *  * cri cd $APP; docker-compose run app python /srv/app/manage.py timesheet-mail --reminder --log /var/log/cron/timesheet.log
 #0,30 *     *  *  * cri cd $APP; bin/upgrade.sh >> var/log/cron/upgrade.log
