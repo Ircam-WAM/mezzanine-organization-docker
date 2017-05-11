@@ -3,7 +3,8 @@
 	url = git+ssh://git@git.forge.ircam.fr/django-eve.git
 [submodule "lib/mezzanine-agenda"]
 	path = lib/mezzanine-agenda
-	url = git+ssh://git@git.forge.ircam.fr/mezzanine-agenda.git
+    url = git+ssh://git@git.forge.ircam.fr/mezzanine-agenda.git
+    branch = dev
 [submodule "var"]
 	path = var
 	url = git+ssh://git@git.forge.ircam.fr/ircam-www-data.git
@@ -13,3 +14,6 @@
 [submodule "lib/django-prestashop"]
 	path = lib/django-prestashop
 	url = https://github.com/yomguy/django-prestashop.git
+[submodule "bin"]
+	path = bin
+	url = git+ssh://git@git.forge.ircam.fr/mezzanine-organization-bin.git
