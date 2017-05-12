@@ -4,4 +4,4 @@
 -e git+https://github.com/yomguy/django-eve.git@dev#egg=django-eve-1.0
 -e git+https://github.com/yomguy/django-prestashop.git@dev#egg=django-prestashop-1.0
 -e git+https://github.com/yomguy/cartridge.git#egg=cartridge-0.12-dev
--e git+https://github.com/Ircam-Web/drum.git@feature/post#egg=drum
+-e git+https://github.com/Ircam-Web/drum.git@feature/post#egg=drum-0.4.0-py3.6
