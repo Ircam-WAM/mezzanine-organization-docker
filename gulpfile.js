@@ -20,6 +20,9 @@ var gulp = require('gulp'),
 var srcFolder = 'app/themes/base/static/src/',
     destFolder = 'app/themes/base/static/'
 
+var startsSrcFolder = 'app/themes/starts_eu/static/starts_eu/src/',
+    startsDestFolder = 'app/themes/starts_eu/static/starts_eu/'
+
 gulp.task('copy-assets-img', function() {
     gulp.src([srcFolder + 'assets/img/**/*'])
         .pipe(gulp.dest(destFolder + 'img'));
@@ -91,6 +94,25 @@ gulp.task('main-css', function() {
         .pipe(browserSync.stream());
 });
 
+gulp.task('starts-main-css', function() {
+    return gulp.src(startsSrcFolder + 'sass/*.scss')
+        .pipe(plumber({
+            errorHandler: function (error) {
+                this.emit('end');
+            }})
+        )
+        .pipe(compass({
+            css: './.tmp/starts-main',
+            sass: startsSrcFolder + 'sass'
+        }))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(sourcemaps.init())
+        .pipe(autoprefixer())
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(startsDestFolder + 'css'))
+        .pipe(browserSync.stream());
+});
+
 gulp.task('cssmin', function() {
     return gulp.src(destFolder + 'css/**/*.css')
         .pipe(sourcemaps.init())
@@ -98,6 +120,16 @@ gulp.task('cssmin', function() {
         .on("error", gutil.log)
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(destFolder + 'css/'))
+        .pipe(browserSync.stream());
+});
+
+gulp.task('starts-cssmin', function() {
+    return gulp.src(startsDestFolder + 'css/**/*.css')
+        .pipe(sourcemaps.init())
+        .pipe(cssnano())
+        .on("error", gutil.log)
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(startsDestFolder + 'css/'))
         .pipe(browserSync.stream());
 });
 
@@ -134,10 +166,11 @@ gulp.task('serve', ['clean'], function () {
     gulp.watch(srcFolder + 'assets/img/**/*', ['copy-assets-img']).on('change', browserSync.reload);
 	gulp.watch(srcFolder + 'js/**/*.js', ['main-js']);
 	gulp.watch(srcFolder + 'sass/**/*.scss', ['main-css']);
+    gulp.watch(startsSrcFolder + 'sass/**/*.scss', ['starts-main-css']);
 
 });
 
-gulp.task('default', ['main-js', 'main-css', 'copy-assets-img', 'copy-vendors-js', 'serve']);
-gulp.task('build', ['main-js', 'main-css', 'copy-assets-img', 'copy-vendors-js'], function() {
-    runSequence(['cssmin', 'jsmin', 'imagemin', 'favicons', 'clean']);
+gulp.task('default', ['main-js', 'main-css', 'starts-main-css', 'copy-assets-img', 'copy-vendors-js', 'serve']);
+gulp.task('build', ['main-js', 'main-css', 'starts-main-css', 'copy-assets-img', 'copy-vendors-js'], function() {
+    runSequence(['cssmin', 'starts-cssmin', 'jsmin', 'imagemin', 'favicons', 'clean']);
 });
