@@ -17,3 +17,7 @@
 [submodule "bin"]
 	path = bin
 	url = git+ssh://git@git.forge.ircam.fr/mezzanine-organization-bin.git
+[submodule "lib/drum"]
+	path = lib/drum
+    url = https://github.com/Ircam-Web/drum.git
+    branch = feature/post
