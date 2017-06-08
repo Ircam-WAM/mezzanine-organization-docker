@@ -23,6 +23,9 @@ var srcFolder = 'app/themes/base/static/src/',
 var startsSrcFolder = 'app/themes/starts_eu/static/starts_eu/src/',
     startsDestFolder = 'app/themes/starts_eu/static/starts_eu/'
 
+var vertigoSrcFolder = 'app/themes/vertigo_starts_eu/static/vertigo_starts_eu/src/',
+    vertigoDestFolder = 'app/themes/vertigo_starts_eu/static/vertigo_starts_eu/'
+
 gulp.task('copy-assets-img', function() {
     gulp.src([srcFolder + 'assets/img/**/*'])
         .pipe(gulp.dest(destFolder + 'img'));
@@ -113,6 +116,25 @@ gulp.task('starts-main-css', function() {
         .pipe(browserSync.stream());
 });
 
+gulp.task('vertigo-main-css', function() {
+    return gulp.src(vertigoSrcFolder + 'sass/*.scss')
+        .pipe(plumber({
+            errorHandler: function (error) {
+                this.emit('end');
+            }})
+        )
+        .pipe(compass({
+            css: './.tmp/vertigo-main',
+            sass: vertigoSrcFolder + 'sass'
+        }))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(sourcemaps.init())
+        .pipe(autoprefixer())
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(vertigoDestFolder + 'css'))
+        .pipe(browserSync.stream());
+});
+
 gulp.task('cssmin', function() {
     return gulp.src(destFolder + 'css/**/*.css')
         .pipe(sourcemaps.init())
@@ -130,6 +152,16 @@ gulp.task('starts-cssmin', function() {
         .on("error", gutil.log)
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(startsDestFolder + 'css/'))
+        .pipe(browserSync.stream());
+});
+
+gulp.task('vertigo-cssmin', function() {
+    return gulp.src(vertigoDestFolder + 'css/**/*.css')
+        .pipe(sourcemaps.init())
+        .pipe(cssnano())
+        .on("error", gutil.log)
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(vertigoDestFolder + 'css/'))
         .pipe(browserSync.stream());
 });
 
@@ -167,10 +199,11 @@ gulp.task('serve', ['clean'], function () {
 	gulp.watch(srcFolder + 'js/**/*.js', ['main-js']);
 	gulp.watch(srcFolder + 'sass/**/*.scss', ['main-css']);
     gulp.watch(startsSrcFolder + 'sass/**/*.scss', ['starts-main-css']);
+    gulp.watch(vertigoSrcFolder + 'sass/**/*.scss', ['vertigo-main-css']);
 
 });
 
-gulp.task('default', ['main-js', 'main-css', 'starts-main-css', 'copy-assets-img', 'copy-vendors-js', 'serve']);
-gulp.task('build', ['main-js', 'main-css', 'starts-main-css', 'copy-assets-img', 'copy-vendors-js'], function() {
-    runSequence(['cssmin', 'starts-cssmin', 'jsmin', 'imagemin', 'favicons', 'clean']);
+gulp.task('default', ['main-js', 'main-css', 'starts-main-css', 'vertigo-main-css', 'copy-assets-img', 'copy-vendors-js', 'serve']);
+gulp.task('build', ['main-js', 'main-css', 'starts-main-css', 'vertigo-main-css', 'copy-assets-img', 'copy-vendors-js'], function() {
+    runSequence(['cssmin', 'starts-cssmin', 'vertigo-cssmin', 'jsmin', 'imagemin', 'favicons', 'clean']);
 });
