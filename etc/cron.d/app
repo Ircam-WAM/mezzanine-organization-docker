@@ -4,5 +4,5 @@ PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 0     */3   *  *  * cri cd $APP; bin/push.sh >> var/log/cron/push.log
 55    11    8  *  * cri cd $APP; docker-compose exec app python /srv/app/manage.py timesheetmail --dry-run
 30    14    8  *  * cri cd $APP; docker-compose exec app python /srv/app/manage.py timesheetmail
-30    14    15 *  * cri cd $APP; docker-compose exec app python /srv/app/manage.py timesheet-ail --reminder
+40    12    20 *  * cri cd $APP; docker-compose exec app python /srv/app/manage.py timesheetmail --reminder
 #0,30 *     *  *  * cri cd $APP; bin/upgrade.sh >> var/log/cron/upgrade.log
