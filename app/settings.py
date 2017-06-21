@@ -74,6 +74,8 @@ PAGE_MENU_TEMPLATES = (
     (7, _("Personnes"), "pages/menus/tree.html"),
 )
 
+MENU_PERSON_ID = 7
+
 # A sequence of fields that will be injected into Mezzanine's (or any
 # library's) models. Each item in the sequence is a four item sequence.
 # The first two items are the dotted path to the model and its field
@@ -228,10 +230,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.sites",
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
     'django_extensions',
+    'drum.links',
+    'hijack',
+    'compat',
+    'hijack_admin',
     "mezzanine.boot",
     "mezzanine.conf",
-    "django.contrib.sitemaps",
     "mezzanine.core",
     "mezzanine.generic",
     "mezzanine.pages",
@@ -259,7 +265,6 @@ INSTALLED_APPS = [
     'guardian',
     'extra_views',
 ]
-
 
 BOWER_COMPONENTS_ROOT = '/srv/bower/'
 BOWER_PATH = '/usr/local/bin/bower'
@@ -292,7 +297,7 @@ TEMPLATES = [{'APP_DIRS': True,
                                                   'django.core.context_processors.tz',
                                                   'mezzanine.conf.context_processors.settings',
                                                   'mezzanine.pages.context_processors.page',
-                                                  'organization.core.context_processors.settings',
+                                                  'organization.core.context_processors.organization_settings',
                                                   )
                         }
             }]
@@ -356,6 +361,25 @@ GRAPH_MODELS = {
   'group_models': True,
 }
 
+########
+# DRUM #
+########
+
+# Drum-specific Mezzanine settings
+# ACCOUNTS_PROFILE_MODEL = "links.Profile"
+# SITE_TITLE = "IRCAM"
+RATINGS_RANGE = (-1, 1)
+COMMENTS_ACCOUNT_REQUIRED = True
+RATINGS_ACCOUNT_REQUIRED = True
+ACCOUNTS_PROFILE_VIEWS_ENABLED = False
+# SEARCH_MODEL_CHOICES = ("links.Link",)
+
+# Drum settings
+ALLOWED_DUPLICATE_LINK_HOURS = 24 * 7 * 3
+ITEMS_PER_PAGE = 20
+LINK_REQUIRED = False
+AUTO_TAG = True
+
 #########################
 # OPTIONAL APPLICATIONS #
 #########################
@@ -400,3 +424,17 @@ except ImportError:
     pass
 else:
     set_dynamic_settings(globals())
+
+# HIJACK
+HIJACK_DISPLAY_WARNING = False
+HIJACK_ALLOW_GET_REQUESTS = False
+HIJACK_REGISTER_ADMIN = False
+SILENCED_SYSTEM_CHECKS = ["hijack_admin.E001"]
+
+if DEBUG :
+    SILENCED_SYSTEM_CHECKS = []
+    HIJACK_LOGIN_REDIRECT_URL = "/person"
+    HIJACK_LOGOUT_REDIRECT_URL = "/"
+    HIJACK_ALLOW_GET_REQUESTS =  True
+    HIJACK_DISPLAY_WARNING = True
+    HIJACK_REGISTER_ADMIN = True

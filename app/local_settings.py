@@ -23,9 +23,17 @@ import os
 from django.utils.translation import ugettext_lazy as _
 from datetime import datetime, date
 import ldap, logging
+from django.core.urlresolvers import reverse_lazy
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 DEBUG = True if os.environ.get('DEBUG') == 'True' else False
+
+if DEBUG:
+    MODELTRANSLATION_DEBUG = True
+
+DOMAIN = "www.ircam.fr/"
+
+IRCAM_EMPLOYER = 1
 
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
@@ -196,7 +204,7 @@ PAGES_PUBLISHED_INCLUDE_LOGIN_REQUIRED = True
 
 SEARCH_PER_PAGE = 10
 MAX_PAGING_LINKS = 10
-DAL_MAX_RESULTS = 20
+DAL_MAX_RESULTS = 25
 
 RATINGS_ACCOUNT_REQUIRED = True
 
@@ -289,10 +297,9 @@ if DEBUG:
 AUTH_LDAP_SERVER_URI = "ldap://clusterldap1.ircam.fr"
 # AUTH_LDAP_BIND_DN = "dc=ircam,dc=fr"
 # AUTH_LDAP_BIND_PASSWORD = ""
-# AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=People,dc=ircam,dc=fr", ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
-
+AUTH_LDAP_USER_SEARCH = LDAPSearch("ou=People,dc=ircam,dc=fr", ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
 # or perhaps:
-AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=People,dc=ircam,dc=fr"
+#AUTH_LDAP_USER_DN_TEMPLATE = "ou=People,dc=ircam,dc=fr uid=%(user)s"
 
 # Set up the basic group parameters.
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch("ou=People,dc=ircam,dc=fr",
@@ -325,7 +332,7 @@ AUTH_LDAP_GROUP_CACHE_TIMEOUT = 3600
 
 
 AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
+    "organization.core.backend.OrganizationLDAPBackend",
     "mezzanine.core.auth_backends.MezzanineBackend",
     'guardian.backends.ObjectPermissionBackend',
 )
@@ -333,13 +340,14 @@ AUTHENTICATION_BACKENDS = (
 # guardian
 ANONYMOUS_USER_NAME = None
 
-LOGIN_REDIRECT_URL = "/profile"
+LOGIN_REDIRECT_URL = reverse_lazy('organization-network-person-detail')
 
 # TIMESHEET
 
 TIMESHEET_USER_TEST = 849  # Emilie Zawadzki
+TIMESHEET_LOG_PATH = "/var/log/cron/"
 
-if DEBUG == True:
+if DEBUG:
     TIMESHEET_MASTER_MAIL = "zawadzki@ircam.fr"
 else:
     TIMESHEET_MASTER_MAIL = "Hugues.Vinet@ircam.fr"

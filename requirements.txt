@@ -30,3 +30,5 @@ django-guardian==1.4.6
 django-auth-ldap==1.2.10
 django-extra-views==0.8.0
 bleach==1.5.0
+django-hijack==2.1.4
+django-hijack-admin==2.1.4

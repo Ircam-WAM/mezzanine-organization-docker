@@ -40,9 +40,8 @@ from django.db.models import Q
 from dal import autocomplete
 from organization.network.models import *
 from organization.core.views import *
-from datetime import date
+from datetime import date, timedelta, datetime
 from organization.network.forms import *
-from organization.network.utils import TimesheetXLS
 from organization.projects.models import ProjectWorkPackage
 from collections import OrderedDict
 from django.http.response import HttpResponseRedirect
@@ -61,6 +60,30 @@ class PersonDetailView(SlugMixin, DetailView):
     model = Person
     template_name='network/person_detail.html'
     context_object_name = 'person'
+
+    def get(self, request, *args, **kwargs):
+        # if not hasattr(self.request.user, 'ldap_user') or not self.request.user.person:
+        #     response = redirect('organization-home')
+        self.object = self.get_object(self.queryset)
+        context = self.get_context_data(object=self.object)
+        response = self.render_to_response(context)
+        return response
+
+    def get_object(self, queryset):
+        obj = None
+        if 'slug' in self.kwargs:
+            slug = self.kwargs['slug']
+        else:
+            slug = None
+
+        if hasattr(self.request.user, 'person') and not slug and self.request.user.is_authenticated() and not 'username' in self.kwargs:
+            obj = self.request.user.person
+        elif 'username' in self.kwargs:
+            user = User.objects.get(username=self.kwargs['username'])
+            obj = Person.objects.get(user=user)
+        else:
+            obj = super().get_object()
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super(PersonDetailView, self).get_context_data(**kwargs)
@@ -96,6 +119,17 @@ class PersonDetailView(SlugMixin, DetailView):
         return context
 
 
+class ProfileDetailView(RedirectView):
+
+    permanent = False
+    query_string = True
+    pattern_name = 'organization-network-person-detail'
+
+    def get_redirect_url(self, *args, **kwargs):
+        article = get_object_or_404(Article, pk=kwargs['pk'])
+        article.update_counter()
+        return super(ArticleCounterRedirectView, self).get_redirect_url(*args, **kwargs)
+
 class PersonListBlockAutocompleteView(autocomplete.Select2QuerySetView):
 
     def get_queryset(self):
@@ -130,6 +164,7 @@ class PersonAutocompleteView(autocomplete.Select2QuerySetView):
             qs = qs.filter(person_title__istartswith=self.q)
 
         return qs
+
 
 class OrganizationListView(ListView):
 
@@ -186,15 +221,13 @@ class TimeSheetCreateView(TimesheetAbstractView, FormSetView):
     formset = ""
     extra = 0
     success_url = reverse_lazy("organization-network-timesheet-list-view")
-    curr_month = date.today().month
-    curr_year = date.today().year
+    last_day_in_month = date.today().replace(day=1) - timedelta(days=1)
+    curr_month = last_day_in_month.month
+    curr_year = last_day_in_month.year
 
-    def get_activity_by_project(self, email, year, month):
+    def get_activity_by_project(self, user, year, month):
         project_list = []
-        # backdoor to delete
-        # activities = PersonActivity.objects.filter(person__slug=email).filter(date_to__gt=date.today())
-        # if not activities :
-        activities = PersonActivity.objects.filter(person__email=email).filter(date_to__gt=date.today())
+
         first_day_in_month = ''
         last_day_in_month = ''
 
@@ -204,6 +237,12 @@ class TimeSheetCreateView(TimesheetAbstractView, FormSetView):
         except ValueError:
             raise Http404
 
+        activities = PersonActivity.objects.filter(person=user.person).filter(
+            Q(date_from__lte=first_day_in_month) & Q(date_to__range=(first_day_in_month, last_day_in_month)) \
+            | Q(date_from__range=(first_day_in_month, last_day_in_month)) & Q(date_to__range=(first_day_in_month, last_day_in_month)) \
+            | Q(date_from__range=(first_day_in_month, last_day_in_month)) & Q(date_to__gte=last_day_in_month) \
+            | Q(date_from__lte=first_day_in_month) & Q(date_to__gte=last_day_in_month) \
+        )
         # gather projects of all current activities
         for activity in activities:
             for project_activity in activity.project_activity.filter(project__date_to__gt=date.today()) :
@@ -211,9 +250,10 @@ class TimeSheetCreateView(TimesheetAbstractView, FormSetView):
                     'activity' : activity,
                     'project' : project_activity.project,
                     'work_packages' : project_activity.work_packages.filter(
-                        Q(date_from__lte=first_day_in_month) & Q(date_to__gte=first_day_in_month)
-                        | Q(date_from__gte=first_day_in_month) & Q(date_to__lte=last_day_in_month)
-                        | Q(date_from__lte=last_day_in_month) & Q(date_to__gte=last_day_in_month)
+                        Q(date_from__lte=first_day_in_month) & Q(date_to__range=(first_day_in_month, last_day_in_month)) \
+                        | Q(date_from__range=(first_day_in_month, last_day_in_month)) & Q(date_to__range=(first_day_in_month, last_day_in_month)) \
+                        | Q(date_from__range=(first_day_in_month, last_day_in_month)) & Q(date_to__gte=last_day_in_month) \
+                        | Q(date_from__lte=first_day_in_month) & Q(date_to__gte=last_day_in_month) \
                     ),
                     'year' : year,
                     'month' : month,
@@ -236,11 +276,7 @@ class TimeSheetCreateView(TimesheetAbstractView, FormSetView):
         if "month" in self.kwargs:
             self.curr_month = self.kwargs['month']
 
-        # if "slug" in self.kwargs:
-        #     # backdoor to delete
-        #     initial = self.get_activity_by_project(self.kwargs['slug'], self.curr_year, self.curr_month)
-        # else :
-        initial = self.get_activity_by_project(self.request.user.email, self.curr_year, self.curr_month)
+        initial = self.get_activity_by_project(self.request.user, self.curr_year, self.curr_month)
 
         return initial
 
@@ -282,11 +318,7 @@ class PersonActivityTimeSheetListView(TimesheetAbstractView, ListView):
     context_object_name = 'timesheets_by_year'
 
     def get_queryset(self):
-       # if 'slug' in self.kwargs:
-        #     # backdoor to delete
-        #     timesheets = PersonActivityTimeSheet.objects.filter(activity__person__slug__exact=self.kwargs['slug']).order_by('-year', 'month', 'project')
-        # else:
-        timesheets = PersonActivityTimeSheet.objects.filter(activity__person__email__exact=self.request.user.email).order_by('-year', 'month', 'project')
+        timesheets = PersonActivityTimeSheet.objects.filter(activity__person=self.request.user.person).order_by('-year', 'month', 'project')
 
         t_dict = {}
         for timesheet in timesheets:
@@ -313,20 +345,13 @@ class PersonActivityTimeSheetListView(TimesheetAbstractView, ListView):
         return OrderedDict(sorted(t_dict.items(), key=lambda t: -t[0]))
 
     def get_context_data(self, **kwargs):
+        last_day_in_month = date.today().replace(day=1) - timedelta(days=1)
         context = super(PersonActivityTimeSheetListView, self).get_context_data(**kwargs)
-        context['current_month'] = date.today().month
-        context['current_year'] = date.today().year
-        context['months'] = list(range(1, date.today().month + 1))
+        context['current_month'] = last_day_in_month.month
+        context['current_year'] = last_day_in_month.year
+        context['months'] = list(range(1, last_day_in_month.month + 1))
         context.update(self.kwargs)
         return context
-
-
-class PersonActivityTimeSheetExportView(TimesheetAbstractView, View):
-
-    def get(self, *args, **kwargs):
-        timesheets = PersonActivityTimeSheet.objects.filter(activity__person__slug__exact=kwargs['slug'], year=kwargs['year'])
-        xls = TimesheetXLS(timesheets)
-        return xls.write()
 
 
 class TimeSheetCreateCurrMonthView(TimeSheetCreateView):
