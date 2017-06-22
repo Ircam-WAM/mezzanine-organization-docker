@@ -1,6 +1,6 @@
 class: center, middle, vertigo
 
-# Vertigo - WP3 (IRCAM)
+# Vertigo - WP3
 <hr>
 ### Plenary Meeting - 22/03/2017 - Innova+
 <img src="img/vertigo_logo1.png" height="100px" />
@@ -16,15 +16,28 @@ https://taiga.ircam.fr/project/yomguy-vertigo/us/2?milestone=40
 - inputs and reviews from various partners
 - UX defined in coordination with EPFL
 - some US could be adapted during the dev process
+- development plan by Libelium (1/2 month sprints until nov 2017)
 
 ---
 class: vertigo
 
+.pull-left[
 # D3.2 (M6) Ircam
 
-## Architecture
+## Platform architecture
 
-<img src="img/" height="100px" />
+- MVC schema
+- multi-domain
+	- **www.starts.eu** : pages, events, links, maps, sign in/up
+	- **vertigo.start.eu** : pages, calls, ICT projects, communities, residencies, sign in/up, etc...
+	- **vertigo.ircam.fr** : pages, events, links, maps
+- custom workflow
+- Ulysses integration
+]
+
+.pull-right[
+<img src="img/vertigo_starts_arch.svg" height="600px" style="background-color:white; padding:20px;" />
+]
 
 ---
 class: center, middle, vertigo
