@@ -1,6 +1,6 @@
 class: center, middle, vertigo
 
-# Vertigo - WP3
+# Vertigo - WP3 - M6
 <hr>
 ### Plenary Meeting - 22/03/2017 - Innova+
 <img src="img/vertigo_logo1.png" height="100px" />
@@ -26,11 +26,11 @@ class: vertigo
 
 ## Platform architecture
 
-- MVC schema
+- MVC >> modules
 - multi-domain
-	- **www.starts.eu** : pages, events, links, maps, sign in/up
-	- **vertigo.start.eu** : pages, calls, ICT projects, communities, residencies, sign in/up, etc...
-	- **vertigo.ircam.fr** : pages, events, links, maps
+	- **www.starts.eu** <br> pages, events, links, maps, sign in/up
+	- **vertigo.start.eu** <br> pages, calls, ICT projects, communities, residencies, sign in/up, etc...
+	- **vertigo.ircam.fr** <br> pages, events, links, maps
 - custom workflow
 - Ulysses integration
 ]
@@ -42,9 +42,9 @@ class: vertigo
 ---
 class: center, middle, vertigo
 
-# Vertigo - Plenary discussion / workgroup outputs
+# Vertigo - Workgroup outputs - WP3
 <hr>
-### Plenary Meeting - 23/03/2017 - Libelium + IRCAM
+### Plenary Meeting - 23/03/2017 - Innova+
 <img src="img/vertigo_logo1.png" height="100px" />
 
 ---
