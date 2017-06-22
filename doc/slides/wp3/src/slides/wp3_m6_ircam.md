@@ -12,11 +12,11 @@ class: vertigo
 
 https://taiga.ircam.fr/project/yomguy-vertigo/backlog?no-milestone=1&q=&tags=platform
 
-- functional and technical specifications
-- inputs and reviews from various partners
+- high level functional and technical specifications delivered
 - UX defined in coordination with EPFL
-- some US could be adapted during the dev process
-- development plan by Libelium (1/2 month sprints until nov 2017)
+- inputs and reviews from various partners
+- some US could be adapted on taiga during the dev process BUT before engaging sprints
+- development plan by Libelium (1/2 month length sprints until nov 2017 initialized with IRCAM)
 
 ---
 class: vertigo
