@@ -35,6 +35,7 @@ from mezzanine_agenda.admin import *
 from organization.core.models import *
 from organization.agenda.models import *
 from organization.agenda.forms import *
+from organization.agenda.translation import *
 
 
 class EventBlockInline(StackedDynamicInlineAdmin):
@@ -103,20 +104,67 @@ class DynamicContentEventInline(TabularDynamicInlineAdmin):
         )
 
 
+class EventParentFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = _('is parent')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'is_parent'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return (
+            ('True', _('True')),
+            ('False', _('False')),
+        )
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        if self.value() == 'True':
+            return queryset.filter(parent__isnull=True)
+        if self.value() == 'False':
+            return queryset.exclude(parent__isnull=True)
+
+
 class CustomEventAdmin(EventAdmin):
     """
     Admin class for events.
     """
+    def is_parent(self, instance):
+        event_is_parent = False
+        if instance.parent is None:
+            # self.allow_tags = True
+            event_is_parent = '<div style="width:100%%; height:100%%; background-color:orange;">True</div>'
+        return event_is_parent
 
     fieldsets = deepcopy(EventAdminBase.fieldsets)
     exclude = ("short_url", )
-    list_display = ["title", "start", "end", "rank", "user", "status", "admin_link"]
+    is_parent.allow_tags = True
+    list_display = ["title", "start", "end", "rank", "user", "status", "is_parent","admin_link"]
     if settings.EVENT_USE_FEATURED_IMAGE:
         list_display.insert(0, "admin_thumb")
-    list_filter = deepcopy(DisplayableAdmin.list_filter) + ("location", "category")
+    list_filter = deepcopy(DisplayableAdmin.list_filter) + ("location", "category", EventParentFilter)
     inlines = [EventPeriodInline, EventBlockInline, EventImageInline, EventDepartmentInline,
                 EventPersonInline, EventLinkInline, EventPlaylistInline, EventTrainingInline,
                 EventRelatedTitleAdmin, DynamicContentEventInline]
+
+    def save_form(self, request, form, change):
+        """
+        Super class ordering is important here - user must get saved first.
+        """
+        OwnableAdmin.save_form(self, request, form, change)
+        return DisplayableAdmin.save_form(self, request, form, change)
 
 
 class CustomEventCategoryAdmin(BaseTranslationModelAdmin):

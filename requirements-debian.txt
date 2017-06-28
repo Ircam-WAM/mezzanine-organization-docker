@@ -11,3 +11,7 @@ python-sphinx
 ruby
 ruby-dev
 gettext
+libsasl2-dev
+python3-dev
+libldap2-dev
+libssl-dev

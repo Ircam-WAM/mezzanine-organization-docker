@@ -23,7 +23,7 @@ from copy import deepcopy
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-
+from pprint import pprint
 from mezzanine.core.admin import *
 from mezzanine.pages.admin import PageAdmin
 from modeltranslation.admin import TranslationTabularInline
@@ -33,6 +33,7 @@ from organization.media.models import Playlist
 from organization.pages.admin import PageImageInline
 from organization.projects.forms import DynamicContentProjectForm
 from organization.core.admin import null_filter
+from organization.projects.translation import *
 
 
 class ProjectLinkInline(StackedDynamicInlineAdmin):
@@ -159,8 +160,7 @@ class ProjectAdminDisplayable(DisplayableAdmin):
                 ]
     filter_horizontal = ['teams', 'organizations']
     list_filter = ['type', 'program', 'program_type', null_filter('external_id'), 'topic', 'validation_status']
-    list_display = ['title', 'created', 'topic', 'validation_status',
-                    'date_from', 'date_to', 'status', 'external_id', 'admin_link']
+    list_display = ['title', 'created', 'topic', 'validation_status', 'date_from', 'date_to', 'lead_organization',  'program', 'status', 'external_id', 'admin_link']
 
 
 class ProjectTopicAdmin(BaseTranslationModelAdmin):
@@ -225,6 +225,8 @@ class ProjectCallAdminDisplayable(DisplayableAdmin):
                 ]
     # list_filter = ['type', 'program', 'program_type', null_filter('external_id')]
     # list_display = ['title', 'date_from', 'date_to', 'status', 'admin_link']
+
+    search_fields = ['title', 'project__title',]
 
 
 admin.site.register(Project, ProjectAdminDisplayable)

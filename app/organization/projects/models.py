@@ -76,7 +76,8 @@ class Project(Displayable, Period, RichText):
     class Meta:
         verbose_name = _('project')
         verbose_name_plural = _("projects")
-        ordering = ['-date_from', '-date_to']
+        # ordering = ['-date_from', '-date_to']
+        ordering = ['title', ]
 
     def __str__(self):
         return self.title
@@ -205,7 +206,7 @@ class ProjectCall(Displayable, Period, RichText, NamedOnly):
             self.name = self.title
         if not self.title and self.name:
             self.title = self.name
-        super(ProjectCall, self).save(args, kwargs)
+        super('ProjectCall', self).save(args, kwargs)
 
     @property
     def is_closed(self):
@@ -221,22 +222,22 @@ class ProjectCall(Displayable, Period, RichText, NamedOnly):
 
 class ProjectCallBlock(Block):
 
-    call = models.ForeignKey(ProjectCall, verbose_name=_('project call blocks'), related_name='blocks', blank=True, null=True, on_delete=models.SET_NULL)
+    call = models.ForeignKey('ProjectCall', verbose_name=_('project call blocks'), related_name='blocks', blank=True, null=True, on_delete=models.SET_NULL)
 
 
 class ProjectCallImage(Image):
 
-    call = models.ForeignKey(ProjectCall, verbose_name=_('project call image'), related_name='images', blank=True, null=True, on_delete=models.SET_NULL)
+    call = models.ForeignKey('ProjectCall', verbose_name=_('project call image'), related_name='images', blank=True, null=True, on_delete=models.SET_NULL)
 
 
 class ProjectCallFile(File):
 
-    call = models.ForeignKey(ProjectCall, verbose_name=_('project call file'), related_name='files', blank=True, null=True, on_delete=models.SET_NULL)
+    call = models.ForeignKey('ProjectCall', verbose_name=_('project call file'), related_name='files', blank=True, null=True, on_delete=models.SET_NULL)
 
 
 class ProjectCallLink(Link):
 
-    call = models.ForeignKey(ProjectCall, verbose_name=_('project call link'), related_name='links', blank=True, null=True, on_delete=models.SET_NULL)
+    call = models.ForeignKey('ProjectCall', verbose_name=_('project call link'), related_name='links', blank=True, null=True, on_delete=models.SET_NULL)
 
 
 class ProjectDemo(Displayable, RichText, URL):

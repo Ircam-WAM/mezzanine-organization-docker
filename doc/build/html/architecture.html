@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Architecture &mdash; Mezzanine-organization 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="top" title="Mezzanine-organization 1.0 documentation" href="index.html" />
+    <link rel="next" title="Install" href="install.html" />
+    <link rel="prev" title="Mezzanine-organization" href="overview.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Install"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Mezzanine-organization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Mezzanine-organization 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
+<p>For easier development and production workflow, this application has been dockerized.</p>
+<div class="section" id="paths">
+<h2>Paths<a class="headerlink" href="#paths" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>app </dt>
+<dd><p class="first last">django application</p>
+</dd>
+</dl>
+<ul>
+<li><dl class="first docutils">
+<dt>app/locale </dt>
+<dd><p class="first last">locales for translations</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>app/migrations </dt>
+<dd><p class="first last">mezzanine migrations</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>app/organization </dt>
+<dd><p class="first last">organization app</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>app/bin </dt>
+<dd><p class="first last">commands to run app with docker</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>app/static </dt>
+<dd><p class="first last">all assets, js, css files</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>app/templates </dt>
+<dd><p class="first last">main templates</p>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><dl class="first docutils">
+<dt>bin </dt>
+<dd><p class="first last">maintenance bin</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>env </dt>
+<dd><p class="first last">docker-compose environment files</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>etc </dt>
+<dd><p class="first last">custom config files</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>lib </dt>
+<dd><p class="first last">custom libraries added as git submodules</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>var </dt>
+<dd><p class="first last">all application data versioned on a separated repository</p>
+</dd>
+</dl>
+<ul>
+<li><dl class="first docutils">
+<dt>var/backup </dt>
+<dd><p class="first last">database backup directory</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>var/media </dt>
+<dd><p class="first last">all media uploaded through the app</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>var/lib/postgresql </dt>
+<dd><p class="first last">postgresql DB (not versioned)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>var/log/nginx </dt>
+<dd><p class="first last">nginx logs (not versioned)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>var/log/uwsgi </dt>
+<dd><p class="first last">uwsgi logs (not versioned)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><dl class="first docutils">
+<dt>bower.json </dt>
+<dd><p class="first last">javascript dependencies</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>debian-requirements.txt </dt>
+<dd><p class="first last">used by docker to install debian packages</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>docker-compose.yml </dt>
+<dd><p class="first last">configuration file for docker containers used by docker-compose</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Dockerfile </dt>
+<dd><p class="first last">instructions to build the app image</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Gemfile </dt>
+<dd><p class="first last">gem dependecies for ruby. For our case, it will install _Sass and _Compass.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>gulpfile.js </dt>
+<dd><p class="first last">script to compile all CSS and JS files</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>install.py </dt>
+<dd><p class="first last">daemon and init boot script installer (Linux only)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>package.json </dt>
+<dd><p class="first last">gulp dependencies when running &#8220;gulp install&#8221;</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>requirements-dev.txt </dt>
+<dd><p class="first last">application package in dev version</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>requirements.txt </dt>
+<dd><p class="first last">application package</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="models">
+<h2>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h2>
+<p>Main modules embed in app/organization</p>
+<ul>
+<li><dl class="first docutils">
+<dt>agenda </dt>
+<dd><p class="first last">manage events, using _Mezzanine-Agenda</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>core </dt>
+<dd><p class="first last">commons or abstract functionnality</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>formats </dt>
+<dd><p class="first last">manage date format</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>job </dt>
+<dd><p class="first last">jobs and candidacies for residency</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>magazine </dt>
+<dd><p class="first last">all news are managed by topics, articles and briefs</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>media </dt>
+<dd><p class="first last">audio and video gathered in playlist</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>network </dt>
+<dd><p class="first last">create a tree of Organizations &gt; Departments &gt; Teams &gt; Persons</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>pages </dt>
+<dd><p class="first last">managing diffent type of pages (admin/pages/page/) and home</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>projects </dt>
+<dd><p class="first last">represent projects related to a team or a person</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>shop </dt>
+<dd><p class="first last">manage product from prestashop (softwares and subscriptions), using _Cartridge</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Architecture</a><ul>
+<li><a class="reference internal" href="#paths">Paths</a></li>
+<li><a class="reference internal" href="#models">Models</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="overview.html"
+                        title="previous chapter">Mezzanine-organization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Install</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/architecture.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="install.html" title="Install"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Mezzanine-organization"
+             >previous</a> |</li>
+        <li><a href="index.html">Mezzanine-organization 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="copyright.html">Copyright</a> 2016 Guillaume Pellerin, Emilie Zawadzki, Jérémy Fabre.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

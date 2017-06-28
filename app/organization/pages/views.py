@@ -28,6 +28,7 @@ from dal_select2_queryset_sequence.views import Select2QuerySetSequenceView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from mezzanine.conf import settings
+from mezzanine_agenda.forms import EventCalendarForm
 from organization.pages.models import CustomPage
 from organization.core.views import SlugMixin, autocomplete_result_formatting
 from organization.magazine.models import Article, Topic, Brief
@@ -54,6 +55,7 @@ class HomeView(SlugMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['briefs'] = self.briefs
+        context['event_calendar_form'] = EventCalendarForm()
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -112,6 +114,7 @@ class DynamicContentHomeBodyView(Select2QuerySetSequenceView):
         events = Event.objects.all()
         briefs = Brief.objects.all()
         medias = Media.objects.all()
+        persons = Person.objects.all()
 
         if self.q:
             articles = articles.filter(title__icontains=self.q)
@@ -119,8 +122,9 @@ class DynamicContentHomeBodyView(Select2QuerySetSequenceView):
             events = events.filter(title__icontains=self.q)
             briefs = briefs.filter(title__icontains=self.q)
             medias = medias.filter(title__icontains=self.q)
+            persons = persons.filter(title__icontains=self.q)
 
-        qs = autocomplete.QuerySetSequence(articles, custompage, briefs, events, medias)
+        qs = autocomplete.QuerySetSequence(articles, custompage, briefs, events, medias, persons)
 
         if self.q:
             # This would apply the filter on all the querysets

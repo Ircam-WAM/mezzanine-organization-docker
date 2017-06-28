@@ -18,7 +18,8 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+from collections import OrderedDict
+from re import match
 from urllib.parse import urlparse
 from django.shortcuts import render
 from django.utils import timezone
@@ -27,7 +28,6 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic.base import *
 from django.shortcuts import get_object_or_404
-from itertools import chain
 from dal import autocomplete
 from dal_select2_queryset_sequence.views import Select2QuerySetSequenceView
 from mezzanine_agenda.models import Event
@@ -56,22 +56,29 @@ class ArticleDetailView(SlugMixin, DetailView):
 
         # automatic relation : dynamic content page
         pages = DynamicContentPage.objects.filter(object_id=self.object.id).all()
-        pages = [p.content_object for p in pages]
+        pages = [p.page for p in pages]
 
         # automatic relation : dynamic content article
         articles = DynamicContentArticle.objects.filter(object_id=self.object.id).all()
-        articles = [a.content_object for a in articles]
-
+        articles = [a.article for a in articles]
         # manual relation : get dynamic contents of current article
         dynamic_content = [dca.content_object for dca in self.object.dynamic_content_articles.all()]
 
         # gather all and order by creation date
         related_content = pages
-        related_content = articles
+        related_content += articles
         related_content += dynamic_content
         related_content.sort(key=lambda x: x.created, reverse=True)
         context['related_content'] = related_content
-
+        context["related"] = {}
+        context["related"]["other"] = []
+        context["related"]["event"] = []
+        # for some theme, we need to distinct the event from other related content
+        for rc in related_content:
+            if rc.__class__.__name__ == "Event":
+                context["related"]["event"].append(rc)
+            else :
+                context["related"]["other"].append(rc)
         if self.object.department:
             context['department_weaving_css_class'] = self.object.department.pages.first().weaving_css_class
             context['department_name'] = self.object.department.name
@@ -187,19 +194,34 @@ class ArticleListView(SlugMixin, ListView):
     model = Article
     template_name='magazine/article/article_list.html'
     context_object_name = 'objects'
+    keywords = OrderedDict()
 
     def get_queryset(self):
-        qs = super(ArticleListView, self).get_queryset()
-        qs = qs.filter(status=2)
-        medias = Media.objects.published()
+        self.qs = super(ArticleListView, self).get_queryset()
+        self.qs = self.qs.filter(status=2).order_by('-created')
+        playlists = Playlist.objects.published().order_by('-created').distinct()
 
-        qs = sorted(
-            chain(qs, medias),
+        if 'type' in self.kwargs:
+            if self.kwargs['type'] == "article":
+                playlists = []
+
+            if self.kwargs['type'] == "video" or self.kwargs['type'] == "audio":
+                playlists = playlists.filter(type=self.kwargs['type'])
+                self.qs = []
+
+        self.qs = sorted(
+            chain( self.qs, playlists),
             key=lambda instance: instance.created,
             reverse=True)
 
-        return qs
+        return self.qs
 
     def get_context_data(self, **kwargs):
         context = super(ArticleListView, self).get_context_data(**kwargs)
+        context['keywords'] = settings.ARTICLE_KEYWORDS
+        context['objects'] = paginate(self.qs, self.request.GET.get("page", 1),
+                              settings.MEDIA_PER_PAGE,
+                              settings.MAX_PAGING_LINKS)
+        if 'type' in self.kwargs:
+            context['current_keyword'] = self.kwargs['type'];
         return context
