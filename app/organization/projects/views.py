@@ -249,6 +249,25 @@ class ProjectResidencyListView(ListView):
     model = ProjectResidency
     template_name='projects/project_residency_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ProjectResidencyListView, self).get_context_data(**kwargs)
+        # Add the Call to the context
+        context["call"] = ProjectCall.objects.get(slug=self.kwargs["call_slug"])
+        # Add the related Keywords to the context
+        keywords = []
+        for residency in context["object_list"]:
+            for keyword in residency.keywords.all():
+                if keyword not in keywords:
+                    keywords.append(keyword)
+        context["keywords"] = keywords
+        return context
+
+    def get_queryset(self):
+        call = ProjectCall.objects.get(slug=self.kwargs["call_slug"])
+        projects = Project.objects.filter(call=call)
+        qs = ProjectResidency.objects.filter(project__in=projects).filter(validated=True).select_related()
+        return qs
+
 
 class ProjectResidencyCreateView(CreateWithInlinesView):
 

@@ -140,6 +140,13 @@ class DynamicContentProjectInline(TabularDynamicInlineAdmin):
         )
 
 
+class ProjectResidencyAdmin(admin.ModelAdmin):
+
+    model = ProjectResidency
+    list_display = ["title", "project", "artist", "producer", "validated",]
+    list_filter = ["validated"]
+
+
 class ProjectAdminDisplayable(DisplayableAdmin):
 
     fieldsets = deepcopy(ProjectAdmin.fieldsets)
@@ -240,3 +247,4 @@ admin.site.register(Repository)
 admin.site.register(RepositorySystem)
 admin.site.register(ProjectWorkPackage, ProjectWorkPackageAdmin)
 admin.site.register(ProjectCall, ProjectCallAdminDisplayable)
+admin.site.register(ProjectResidency, ProjectResidencyAdmin)
