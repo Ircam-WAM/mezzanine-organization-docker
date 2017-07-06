@@ -129,12 +129,19 @@ class ProjectDemoDetailView(SlugMixin, ProjectMixin, DetailView):
 
     model = ProjectDemo
     template_name='projects/project_demo_detail.html'
+    context_object_name = 'demo'
 
 
 class ProjectBlogPageView(SlugMixin, ProjectMixin, DetailView):
 
     model = ProjectBlogPage
     template_name='projects/project_blogpage_detail.html'
+
+
+class ProjectICTDetailView(SlugMixin,DetailView):
+
+    model = Project
+    template_name='projects/project_ict_detail.html'
 
 
 class ProjectCallMixin(object):

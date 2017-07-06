@@ -22,7 +22,7 @@
 from __future__ import unicode_literals
 
 import django.views.i18n
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 
@@ -31,8 +31,14 @@ admin.autodiscover()
 from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
 
+urlpatterns = []
 
-urlpatterns = [
+if "drum.links" in settings.INSTALLED_APPS:
+    urlpatterns += [
+        url("^%s/" % settings.DRUM_SLUG, include("drum.links.urls")),
+    ]
+
+urlpatterns += [
     url("^", include('organization.core.urls')),
     url("^", include('organization.pages.urls')),
     url("^", include('organization.magazine.urls')),
@@ -43,3 +49,8 @@ urlpatterns = [
     url("^", include('organization.job.urls')),
     url("^", include('organization.shop.urls')),
 ]
+
+if settings.DEBUG :
+    urlpatterns += [
+        url(r'^hijack/', include('hijack.urls')),
+    ]

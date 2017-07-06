@@ -28,7 +28,13 @@ from mezzanine.blog.models import BlogPost
 from mezzanine.generic.models import ThreadedComment, Keyword
 from mezzanine.conf import settings
 from django.contrib.admin import SimpleListFilter
-
+from organization.core.translation import *
+from django.contrib.auth.admin import UserAdmin
+try:
+    from hijack_admin.admin import HijackUserAdmin
+except ImportError:
+    pass
+from pprint import pprint
 
 class KeywordAdmin(BaseTranslationModelAdmin):
 
@@ -68,6 +74,24 @@ class NullListFilter(SimpleListFilter):
             return queryset.filter(**kwargs)
         return queryset
 
+if settings.DEBUG :
+    class UserAdminCustom(HijackUserAdmin, UserAdmin):
+
+        list_display = UserAdmin.list_display + ('is_active',  'is_superuser', 'last_login', 'date_joined', 'person_link', 'my_groups', 'hijack_field' )
+
+        def person_link(self, instance):
+            url = reverse('admin:%s_%s_change' %(instance.person._meta.app_label, instance.person._meta.model_name),  args=[instance.person.id] )
+            return '<a href="%s" target="_blank">%s</a>' %(url, instance.person.__str__())
+
+        person_link.allow_tags = True
+
+        def my_groups(self, instance):
+            grp_str = []
+            for group in instance.groups.all():
+                if group :
+                    grp_str.append(group.name)
+            return ", ".join(grp_str)
+
 
 def null_filter(field, title_=None):
     """Helper to filter by null or not null any field in admin"""
@@ -80,4 +104,9 @@ def null_filter(field, title_=None):
 admin.site.register(LinkType)
 admin.site.unregister(BlogPost)
 admin.site.unregister(ThreadedComment)
-admin.site.register(Keyword, KeywordAdmin)
+#admin.site.register(Keyword, KeywordAdmin)
+
+if settings.DEBUG and settings.HIJACK_REGISTER_ADMIN:
+    UserModel = get_user_model()
+    admin.site.unregister(UserModel)
+    admin.site.register(UserModel, UserAdminCustom)

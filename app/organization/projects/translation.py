@@ -160,6 +160,7 @@ class ProjectContactTranslationOptions(TranslationOptions):
 
     pass
 
+
 @register(ProjectTopic)
 class ProjectTopicTranslationOptions(TranslationOptions):
 

@@ -22,8 +22,18 @@
 import os
 from django.utils.translation import ugettext_lazy as _
 from datetime import datetime, date
+import ldap, logging
+from django.core.urlresolvers import reverse_lazy
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 DEBUG = True if os.environ.get('DEBUG') == 'True' else False
+
+if DEBUG:
+    MODELTRANSLATION_DEBUG = True
+
+DOMAIN = "www.ircam.fr/"
+
+IRCAM_EMPLOYER = 1
 
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
@@ -48,13 +58,3 @@ EVENT_DOMAIN = "//eve.ircam.fr"
 EVENT_SHOP_URL = EVENT_DOMAIN+"/pub.php/event/%d/edit"
 EVENT_PASS_URL = EVENT_DOMAIN+"/pub.php/pass/"
 EVENT_CONFIRMATION_URL = EVENT_DOMAIN+"/pub.php/cart/done?transaction_id=%s"
-
-# FIGGO API - Lucca
-FIGGO_API_URL_PROD='https://ircam.ilucca.net/'
-FIGGO_API_HEADER_AUTH='Lucca application=bd6d5481-40eb-414b-9135-434e12749223'
-
-HOST_THEMES = [
-    ('vertigo.ircam.fr', 'themes.base'),
-    ('vertigo.starts.eu', 'themes.vertigo_starts_eu'),
-    ('www.starts.eu', 'themes.starts_eu'),
-]

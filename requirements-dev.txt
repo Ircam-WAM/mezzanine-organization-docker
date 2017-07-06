@@ -2,3 +2,4 @@
 -e git+https://github.com/yomguy/mezzanine.git@jquery#egg=mezzanine-4.2-dev
 -e git+https://github.com/yomguy/grappelli-safe.git@dynamic_stacked#egg=grappelli-safe-0.4.2
 -e git+https://github.com/yomguy/cartridge.git#egg=cartridge-0.12-dev
+-e git+https://github.com/Ircam-Web/drum.git@feature/post#egg=drum-0.4.0-py3.6

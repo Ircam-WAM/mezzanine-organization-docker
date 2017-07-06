@@ -22,12 +22,12 @@
 from django.conf import settings # import the settings file
 from datetime import datetime, date
 from organization.pages.models import Page
-from organization.network.models import Organization, OrganizationLinkedInline
+from organization.network.models import Organization, OrganizationLinkedInline, Person
 from mezzanine.utils.sites import current_site_id
 from django.contrib.sites.models import Site
 
 
-def settings(request):
+def organization_settings(request):
     date_now = datetime.now()
     # SEASON
     current_season = int(date_now.year) - 1 if datetime(date_now.year, 1,1) <= date_now and date_now <= datetime(date_now.year, 7, 31) else date_now.year
@@ -70,5 +70,7 @@ def settings(request):
             'linked_organization_content' : linked_org_content,
             'linked_organization_footer' : linked_org_footer,
             'linked_organization_footer_2' : linked_org_footer_2,
-            'research_slug' : research_slug
+            'research_slug' : research_slug,
+            'menu_person_id': settings.MENU_PERSON_ID,
+            'debug_mode' : settings.DEBUG
             }

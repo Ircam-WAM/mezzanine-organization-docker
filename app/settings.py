@@ -78,8 +78,10 @@ PAGE_MENU_TEMPLATES = (
     (4, _("Footer horizontal"), "pages/menus/footer_horizontal.html"),
     (5, _("Magazine"), "pages/menus/magazine.html"),
     (6, _("You are"), "pages/menus/vous_etes.html"),
-
+    (7, _("Person"), "pages/menus/tree.html"),
 )
+
+MENU_PERSON_ID = 7
 
 # A sequence of fields that will be injected into Mezzanine's (or any
 # library's) models. Each item in the sequence is a four item sequence.
@@ -136,11 +138,11 @@ LANGUAGE_CODE = "en"
 
 # Supported languages
 LANGUAGES = (
-    ('en', _('English')),
     ('fr', _('French')),
+    ('en', _('English')),
 )
 
-LOCALE_PATHS = ['locale',]
+LOCALE_PATHS = ['locale', '../lib/mezzanine-agenda/mezzanine_agenda/locale/']
 
 # Whether a user's session cookie expires when the Web browser is closed.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -195,6 +197,7 @@ STATIC_URL = "/static/"
 # STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
 STATIC_ROOT = '/srv/static/'
 
+
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
@@ -217,7 +220,7 @@ INSTALLED_APPS = [
     "themes.base",
     "themes.starts_eu",
     'themes.vertigo_starts_eu',
-
+    "modeltranslation",
     "modeltranslation",
     "dal",
     "dal_select2",
@@ -229,10 +232,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.sites",
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
     'django_extensions',
+    'drum.links',
+    'hijack',
+    'compat',
+    'hijack_admin',
     "mezzanine.boot",
     "mezzanine.conf",
-    "django.contrib.sitemaps",
     "mezzanine.core",
     "mezzanine.generic",
     "mezzanine.pages",
@@ -257,8 +264,9 @@ INSTALLED_APPS = [
     "organization.job",
     "sorl.thumbnail", # required for thumbnail support
     "django_instagram",
+    'guardian',
+    'extra_views',
 ]
-
 
 BOWER_COMPONENTS_ROOT = '/srv/bower/'
 BOWER_PATH = '/usr/local/bin/bower'
@@ -291,7 +299,7 @@ TEMPLATES = [{'APP_DIRS': True,
                                                   'django.core.context_processors.tz',
                                                   'mezzanine.conf.context_processors.settings',
                                                   'mezzanine.pages.context_processors.page',
-                                                  'organization.core.context_processors.settings',
+                                                  'organization.core.context_processors.organization_settings',
                                                   )
                         }
             }]
@@ -530,6 +538,24 @@ FORMAT_MODULE_PATH = [
     'organization.formats',
 ]
 
+########
+# DRUM #
+########
+
+# Drum-specific Mezzanine settings
+# ACCOUNTS_PROFILE_MODEL = "links.Profile"
+# SITE_TITLE = "IRCAM"
+RATINGS_RANGE = (-1, 1)
+COMMENTS_ACCOUNT_REQUIRED = True
+RATINGS_ACCOUNT_REQUIRED = True
+ACCOUNTS_PROFILE_VIEWS_ENABLED = False
+# SEARCH_MODEL_CHOICES = ("links.Link",)
+
+# Drum settings
+ALLOWED_DUPLICATE_LINK_HOURS = 24 * 7 * 3
+ITEMS_PER_PAGE = 20
+LINK_REQUIRED = False
+AUTO_TAG = True
 
 #########################
 # OPTIONAL APPLICATIONS #
@@ -594,3 +620,17 @@ except ImportError:
     pass
 else:
     set_dynamic_settings(globals())
+
+# HIJACK
+HIJACK_DISPLAY_WARNING = False
+HIJACK_ALLOW_GET_REQUESTS = False
+HIJACK_REGISTER_ADMIN = False
+SILENCED_SYSTEM_CHECKS = ["hijack_admin.E001"]
+
+if DEBUG :
+    SILENCED_SYSTEM_CHECKS = []
+    HIJACK_LOGIN_REDIRECT_URL = "/person"
+    HIJACK_LOGOUT_REDIRECT_URL = "/"
+    HIJACK_ALLOW_GET_REQUESTS =  True
+    HIJACK_DISPLAY_WARNING = True
+    HIJACK_REGISTER_ADMIN = True

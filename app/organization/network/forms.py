@@ -30,6 +30,8 @@ from mezzanine.core.models import Orderable
 from organization.network.models import *
 from organization.pages.models import Page, CustomPage
 from extra_views import InlineFormSet
+from organization.projects.models import ProjectWorkPackage
+from organization.network.utils import timesheet_master_notification_for_validation
 
 
 class PageCustomPersonListForm(forms.ModelForm):
@@ -82,14 +84,47 @@ class OrganizationLinkedForm(forms.ModelForm):
 
 class PersonActivityTimeSheetForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super(PersonActivityTimeSheetForm, self).__init__(*args, **kwargs)
+        if 'initial' in kwargs :
+            self.fields['work_packages'].queryset = ProjectWorkPackage.objects.filter(project=kwargs['initial']['project'])
+            self.fields['project'].choices = ((kwargs['initial']['project'].id, kwargs['initial']['project']),)
+            self.fields['activity'].choices = ((kwargs['initial']['activity'].id, kwargs['initial']['activity']),)
+        if self.fields['work_packages'].choices.__len__() == 0:
+            self.fields['work_packages'].widget = forms.MultipleHiddenInput()
+        else:
+            self.fields['work_packages'].widget = forms.CheckboxSelectMultiple(choices=self.fields['work_packages'].choices)
+
     def save(self):
         self.instance.accounting = timezone.now()
+        # send mail
         super(PersonActivityTimeSheetForm, self).save()
+        timesheet_master_notification_for_validation(self.instance.activity.person,
+                                                    self.instance.month,
+                                                    self.instance.year,
+                                                    self.instance._meta.app_config.label,
+                                                    self.instance.__class__.__name__)
 
     class Meta:
         model = PersonActivityTimeSheet
         fields = ('__all__')
+        exclude = ['accounting', 'validation', 'month', 'year']
+
+
+class ProjectActivityForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProjectActivityForm, self).__init__(*args, **kwargs)
+        self.fields['work_packages'].queryset = ProjectWorkPackage.objects.filter(project=self.instance.project)
+        self.fields['work_packages'].widget = forms.CheckboxSelectMultiple(choices=self.fields['work_packages'].choices)
+
+    class Meta:
+        model = ProjectActivity
+        fields = ('__all__')
         exclude = ['accounting', 'validation']
+        help_texts = {
+            'work_packages': 'Set percentage between 0 and 100',
+        }
 
 
 class OrganizationContactInline(InlineFormSet):

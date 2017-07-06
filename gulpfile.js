@@ -17,14 +17,9 @@ var gulp = require('gulp'),
     browserify = require('gulp-browserify'),
     sourcemaps = require('gulp-sourcemaps');
 
-var srcFolder = 'app/themes/base/static/src/',
-    destFolder = 'app/themes/base/static/'
 
-var startsSrcFolder = 'app/themes/starts_eu/static/starts_eu/src/',
-    startsDestFolder = 'app/themes/starts_eu/static/starts_eu/'
-
-var vertigoSrcFolder = 'app/themes/vertigo_starts_eu/static/vertigo_starts_eu/src/',
-    vertigoDestFolder = 'app/themes/vertigo_starts_eu/static/vertigo_starts_eu/'
+// var srcFolder = 'app/themes/manifeste2017/static/src/',
+//     destFolder = 'app/themes/manifeste2017/static/'
 
 gulp.task('copy-assets-img', function() {
     gulp.src([srcFolder + 'assets/img/**/*'])
